@@ -35,7 +35,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="8de-6w-sqg" userLabel="Cell Image">
-                                                    <rect key="frame" x="20" y="11" width="374" height="343"/>
+                                                    <rect key="frame" x="20" y="3" width="374" height="359"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="16"/>
@@ -44,29 +44,32 @@
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="27 Августа 2022" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5aJ-d5-D5o" userLabel="Date Label">
-                                                    <rect key="frame" x="28" y="330" width="358" height="16"/>
+                                                    <rect key="frame" x="28" y="338" width="94" height="16"/>
                                                     <fontDescription key="fontDescription" name="YSDisplay-Medium" family="YS Display" pointSize="13"/>
                                                     <color key="textColor" name="YP White"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y6O-OD-QbZ" userLabel="Like Button">
-                                                    <rect key="frame" x="331.5" y="-1" width="62.5" height="56"/>
+                                                    <rect key="frame" x="341" y="-5" width="71" height="56"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" title="Button" image="No Active"/>
-                                                    <buttonConfiguration key="configuration" style="plain" image="No Active" title=" "/>
+                                                    <buttonConfiguration key="configuration" style="plain" image="No Active" title=" ">
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfigurationForImage"/>
+                                                        <fontDescription key="titleFontDescription" type="system" pointSize="18"/>
+                                                    </buttonConfiguration>
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="bottomMargin" secondItem="8de-6w-sqg" secondAttribute="bottom" id="0es-zU-dTo"/>
-                                                <constraint firstItem="8de-6w-sqg" firstAttribute="trailing" secondItem="Y6O-OD-QbZ" secondAttribute="trailing" id="3G1-h7-Wb1"/>
-                                                <constraint firstItem="8de-6w-sqg" firstAttribute="top" secondItem="1Pp-zl-8T2" secondAttribute="topMargin" id="LVl-eW-7jB"/>
-                                                <constraint firstItem="8de-6w-sqg" firstAttribute="leading" secondItem="1Pp-zl-8T2" secondAttribute="leadingMargin" id="Os5-MN-Y5H"/>
-                                                <constraint firstItem="Y6O-OD-QbZ" firstAttribute="leading" secondItem="1Pp-zl-8T2" secondAttribute="leadingMargin" constant="311.5" id="PRU-ud-3JI"/>
-                                                <constraint firstItem="5aJ-d5-D5o" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="8de-6w-sqg" secondAttribute="trailing" constant="-8" id="Wks-6y-s5J"/>
-                                                <constraint firstItem="8de-6w-sqg" firstAttribute="bottom" secondItem="5aJ-d5-D5o" secondAttribute="bottom" constant="8" id="aH4-HL-aRy"/>
-                                                <constraint firstAttribute="trailingMargin" secondItem="8de-6w-sqg" secondAttribute="trailing" id="bZk-Aj-JWE"/>
-                                                <constraint firstItem="5aJ-d5-D5o" firstAttribute="leading" secondItem="8de-6w-sqg" secondAttribute="leading" constant="8" id="e1J-dr-NUI"/>
-                                                <constraint firstItem="Y6O-OD-QbZ" firstAttribute="top" secondItem="8de-6w-sqg" secondAttribute="top" constant="-12" id="i2F-HL-CsK"/>
+                                                <constraint firstItem="8de-6w-sqg" firstAttribute="trailing" secondItem="1Pp-zl-8T2" secondAttribute="trailingMargin" id="1IP-4b-kyI"/>
+                                                <constraint firstItem="5aJ-d5-D5o" firstAttribute="leading" secondItem="8de-6w-sqg" secondAttribute="leading" constant="8" id="2FO-hD-ARp"/>
+                                                <constraint firstItem="8de-6w-sqg" firstAttribute="bottom" secondItem="1Pp-zl-8T2" secondAttribute="bottomMargin" constant="8" id="AXj-jg-nkI"/>
+                                                <constraint firstItem="8de-6w-sqg" firstAttribute="trailing" secondItem="Y6O-OD-QbZ" secondAttribute="trailingMargin" constant="-10" id="CWj-ws-vCh"/>
+                                                <constraint firstItem="8de-6w-sqg" firstAttribute="bottom" secondItem="5aJ-d5-D5o" secondAttribute="bottom" constant="8" id="FsA-h1-M70"/>
+                                                <constraint firstItem="8de-6w-sqg" firstAttribute="top" secondItem="1Pp-zl-8T2" secondAttribute="topMargin" constant="-8" id="LVA-TR-dhv"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5aJ-d5-D5o" secondAttribute="trailing" constant="20" symbolic="YES" id="P6C-2F-I3c"/>
+                                                <constraint firstItem="8de-6w-sqg" firstAttribute="leading" secondItem="1Pp-zl-8T2" secondAttribute="leadingMargin" id="dbQ-C9-rZC"/>
+                                                <constraint firstItem="Y6O-OD-QbZ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1Pp-zl-8T2" secondAttribute="leading" constant="20" symbolic="YES" id="qpX-un-7ky"/>
+                                                <constraint firstItem="Y6O-OD-QbZ" firstAttribute="topMargin" secondItem="8de-6w-sqg" secondAttribute="top" id="vXT-T6-yFp"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" name="YP Black"/>
