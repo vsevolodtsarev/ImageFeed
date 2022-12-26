@@ -10,6 +10,7 @@ import UIKit
 class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
+    private let showSingleImageIdentifier = "ShowSingleImage"
     private var photoName = [String]()
     
     override func viewDidLoad() {
@@ -25,6 +26,17 @@ class ImagesListViewController: UIViewController {
         return formatter
     }()
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == showSingleImageIdentifier {
+            let viewController = segue.destination as? SingleImageViewController
+            if let indexPath = sender as? IndexPath {
+                let image = UIImage(named: photoName[indexPath.row])
+                viewController?.image = image
+            }
+        } else {
+            super.prepare(for: segue, sender: sender)
+        }
+    }
 }
 
 extension ImagesListViewController {
@@ -43,6 +55,7 @@ extension ImagesListViewController {
 
 extension ImagesListViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: showSingleImageIdentifier, sender: indexPath)
     }
 }
 
@@ -58,8 +71,6 @@ extension ImagesListViewController: UITableViewDataSource {
         }
         configCell(for: imagesListCell, with: indexPath)
         return imagesListCell
-        
-        
     }
 }
 
