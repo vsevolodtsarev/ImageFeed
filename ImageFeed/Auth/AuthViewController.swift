@@ -15,8 +15,6 @@ protocol AuthViewControllerDelegate: AnyObject {
 final class AuthViewController: UIViewController {
     
     private let buttonSegueId = "ShowWebView"
-    private let oAuth2Service = OAuth2Service()
-    private let oAuth2TokenStorage = OAuth2TokenStorage()
     weak var delegate: AuthViewControllerDelegate?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -29,27 +27,11 @@ final class AuthViewController: UIViewController {
             super.prepare(for: segue, sender: sender)
         }
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-    }
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        oAuth2Service.fetchAuthToken(code) { result in
-            switch result {
-                
-            case .success(let token):
-                self.delegate?.authViewController(self, didAuthenticateWithCode: token)
-                self.oAuth2TokenStorage.token = token
-                
-            case .failure(let error):
-                print(error)
-                
-            }
-        }
+        delegate?.authViewController(self, didAuthenticateWithCode: code)
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {

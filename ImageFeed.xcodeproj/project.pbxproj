@@ -18,6 +18,7 @@
 		13D5F8902969ADF700957C1E /* OAuthTokenResponseBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D5F88F2969ADF700957C1E /* OAuthTokenResponseBody.swift */; };
 		13D5F8922969B82700957C1E /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D5F8912969B82700957C1E /* OAuth2Service.swift */; };
 		13D5F894296B08D200957C1E /* OAuth2TokenStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D5F893296B08D200957C1E /* OAuth2TokenStorage.swift */; };
+		13D5F896296C5EAD00957C1E /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13D5F895296C5EAD00957C1E /* SplashViewController.swift */; };
 		13E39A4E29268FDA006D2BBF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E39A4D29268FDA006D2BBF /* AppDelegate.swift */; };
 		13E39A5029268FDA006D2BBF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E39A4F29268FDA006D2BBF /* SceneDelegate.swift */; };
 		13E39A5229268FDA006D2BBF /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E39A5129268FDA006D2BBF /* ImagesListViewController.swift */; };
@@ -38,6 +39,7 @@
 		13D5F88F2969ADF700957C1E /* OAuthTokenResponseBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthTokenResponseBody.swift; sourceTree = "<group>"; };
 		13D5F8912969B82700957C1E /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
 		13D5F893296B08D200957C1E /* OAuth2TokenStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2TokenStorage.swift; sourceTree = "<group>"; };
+		13D5F895296C5EAD00957C1E /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		13E39A4A29268FDA006D2BBF /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13E39A4D29268FDA006D2BBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		13E39A4F29268FDA006D2BBF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -116,6 +118,14 @@
 			path = Auth;
 			sourceTree = "<group>";
 		};
+		13D5F897296C5EB600957C1E /* SplashView */ = {
+			isa = PBXGroup;
+			children = (
+				13D5F895296C5EAD00957C1E /* SplashViewController.swift */,
+			);
+			path = SplashView;
+			sourceTree = "<group>";
+		};
 		13E39A4129268FDA006D2BBF = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +149,7 @@
 				13918DEE2959EF5F001B6EB3 /* Constants.swift */,
 				13E39A4D29268FDA006D2BBF /* AppDelegate.swift */,
 				13E39A4F29268FDA006D2BBF /* SceneDelegate.swift */,
+				13D5F897296C5EB600957C1E /* SplashView */,
 				13B060AC29644C57003A3939 /* Auth */,
 				1340D0412958261500EFC546 /* SingleImage */,
 				133CB7502942368800E68ADF /* Profile */,
@@ -227,6 +238,7 @@
 				1391C033292A730B00E613AB /* ImagesListCell.swift in Sources */,
 				133CB752294236CB00E68ADF /* ProfileViewController.swift in Sources */,
 				13D5F8922969B82700957C1E /* OAuth2Service.swift in Sources */,
+				13D5F896296C5EAD00957C1E /* SplashViewController.swift in Sources */,
 				13D5F8902969ADF700957C1E /* OAuthTokenResponseBody.swift in Sources */,
 				13B060AE29644CDD003A3939 /* AuthViewController.swift in Sources */,
 				13E39A4E29268FDA006D2BBF /* AppDelegate.swift in Sources */,
