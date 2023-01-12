@@ -14,14 +14,14 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     
-    private let buttonSegueId = "ShowWebView"
+    private let unsplashAuthScreenSegueId = "ShowWebView"
     weak var delegate: AuthViewControllerDelegate?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == buttonSegueId {
+        if segue.identifier == unsplashAuthScreenSegueId {
             guard
                 let webViewViewController = segue.destination as? WebViewViewController
-            else { fatalError("Failed to prepare for \(buttonSegueId)") }
+            else { fatalError("Failed to prepare for \(unsplashAuthScreenSegueId)") }
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)

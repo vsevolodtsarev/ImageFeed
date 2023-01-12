@@ -19,7 +19,6 @@ final class WebViewViewController: UIViewController {
     
     @IBOutlet private var webView: WKWebView!
     @IBOutlet private var progressView: UIProgressView!
-    private let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
     weak var delegate: WebViewViewControllerDelegate?
     
     override func viewDidLoad() {
@@ -64,7 +63,7 @@ final class WebViewViewController: UIViewController {
             } else {
                 super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
             }
-    }
+        }
     
     @IBAction private func didTapBackButton(_ sender: UIButton) {
         delegate?.webViewViewControllerDidCancel(self)
