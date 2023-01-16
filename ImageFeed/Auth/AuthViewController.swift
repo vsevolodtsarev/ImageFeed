@@ -15,6 +15,8 @@ protocol AuthViewControllerDelegate: AnyObject {
 final class AuthViewController: UIViewController {
     
     private let unsplashAuthScreenSegueId = "ShowWebView"
+    private let oAuth2TokenStorage = OAuth2TokenStorage()
+    private let oAuth2Service = OAuth2Service()
     weak var delegate: AuthViewControllerDelegate?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -30,11 +32,25 @@ final class AuthViewController: UIViewController {
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
-    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        delegate?.authViewController(self, didAuthenticateWithCode: code)
-    }
-    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }
+    
+    func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        oAuth2Service.fetchAuthToken(code) { [weak self] result in
+            guard let self = self else { return }
+                switch result {
+                case .success(let token):
+                    DispatchQueue.main.async {
+                        self.delegate?.authViewController(self, didAuthenticateWithCode: code)
+                        self.oAuth2TokenStorage.token = token
+                    }
+
+                case .failure(let error):
+                    print(error)
+                
+            }
+        }
+    }
 }
+

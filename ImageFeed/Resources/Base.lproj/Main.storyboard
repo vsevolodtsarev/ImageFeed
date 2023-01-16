@@ -239,6 +239,10 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="cyQ-Ox-jxI">
+                                <rect key="frame" x="0.0" y="98" width="414" height="4"/>
+                                <color key="progressTintColor" name="YP Black"/>
+                            </progressView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="06F-Jj-pSd">
                                 <rect key="frame" x="16" y="68" width="9" height="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -247,10 +251,6 @@
                                     <action selector="didTapBackButton:" destination="Lsa-Vb-JEh" eventType="touchUpInside" id="cEe-Mv-aEn"/>
                                 </connections>
                             </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="cyQ-Ox-jxI">
-                                <rect key="frame" x="0.0" y="98" width="414" height="4"/>
-                                <color key="progressTintColor" name="YP Black"/>
-                            </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="iMT-dy-znf"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
