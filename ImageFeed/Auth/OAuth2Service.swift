@@ -9,26 +9,25 @@ import Foundation
 
 final class OAuth2Service {
     
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
     private enum NetworkError: Error {
         case codeError
     }
     
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let urlString = "https://unsplash.com/oauth/token"
-        var urlComponents = URLComponents(string: urlString)
-        urlComponents?.queryItems = [
-            URLQueryItem(name: "client_id", value: accessKey),
-            URLQueryItem(name: "client_secret", value: secretKey),
-            URLQueryItem(name: "redirect_uri", value: redirectURI),
-            URLQueryItem(name: "code", value: code),
-            URLQueryItem(name: "grant_type", value: "authorization_code")
-        ]
-        guard let url = urlComponents?.url else { return }
         
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        assert(Thread.isMainThread)
+        if lastCode == code { return }
+        task?.cancel()
+        lastCode = code
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        let request = makeRequest(code: code)
+        let task = urlSession.dataTask(with: request) { data, response, error in
+            
+            self.task = nil
             
             if let error = error {
                 completion(.failure(error))
@@ -48,11 +47,28 @@ final class OAuth2Service {
                     completion(.success(responseBody.accessToken))
                     
                 } catch let error {
+                    self.lastCode = nil
                     completion(.failure(error))
                 }
             }
         }
         
+        self.task = task
         task.resume()
+    }
+    
+    private func makeRequest(code: String) -> URLRequest {
+        var urlComponents = URLComponents(string: tokenURLString)
+        urlComponents?.queryItems = [
+            URLQueryItem(name: "client_id", value: accessKey),
+            URLQueryItem(name: "client_secret", value: secretKey),
+            URLQueryItem(name: "redirect_uri", value: redirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
+        ]
+        guard let url = urlComponents?.url else { fatalError("Failed to create URL") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        return request
     }
 }
