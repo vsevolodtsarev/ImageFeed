@@ -14,6 +14,7 @@ final class OAuth2TokenStorage {
     }
     
     private let userDefaults = UserDefaults.standard
+    static let shared = OAuth2TokenStorage()
     
     var token: String? {
         get {

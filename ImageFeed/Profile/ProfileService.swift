@@ -7,33 +7,62 @@
 
 import Foundation
 
-struct Profile: Decodable {
+struct ProfileResult: Codable {
     
     let username: String
-    let name: String
-    var loginName: String {"@\(username)"}
-    let bio: String
-
-    enum CodingKeys: String, CodingKey {
-        case username = "username"
-        case name = "name"
-        case bio = "bio"
-    }
+    let firstName: String
+    let lastName: String
+    let bio: String?
     
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.username = try container.decode(String.self, forKey: .username)
-        self.name = try container.decode(String.self, forKey: .name)
-        self.bio = try container.decode(String.self, forKey: .bio)
+    enum CodingKeys: String, CodingKey {
+        case username
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case bio
     }
 }
+    struct Profile {
+        let username: String
+        let name: String
+        let loginName: String
+        let bio: String?
+        
+        init(result: ProfileResult) {
+            self.username = result.username
+            self.name = "\(result.firstName)" + "\(result.lastName)"
+            self.loginName = "@\(result.username)"
+            self.bio = result.bio
+        }
+    }
+
+
 
 final class ProfileService {
+    static let shared = ProfileService()
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private(set) var profile: Profile?
     
     
-    
-    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
+    func fetchProfile(_ token: String, completion: @escaping (Result<ProfileResult, Error>) -> Void) {
         
+        assert(Thread.isMainThread)
+        task?.cancel()
+        
+        let request = makeRequest(token: token)
+        let task = urlSession.data(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self = self else { return }
+            switch result {
+            case .success(let profile):
+                self.profile = Profile(result: profile)
+                completion(.success(profile))
+            case .failure(let error):
+                print(error)
+                completion(.failure(error))
+            }
+        }
+        self.task = task
+        task.resume()
     }
     
     private func makeRequest(token: String) -> URLRequest {

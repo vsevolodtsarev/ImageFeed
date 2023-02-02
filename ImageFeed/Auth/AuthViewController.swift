@@ -15,8 +15,8 @@ protocol AuthViewControllerDelegate: AnyObject {
 final class AuthViewController: UIViewController {
     
     private let unsplashAuthScreenSegueId = "ShowWebView"
-    private let oAuth2TokenStorage = OAuth2TokenStorage()
-    private let oAuth2Service = OAuth2Service()
+    private let oAuth2TokenStorage = OAuth2TokenStorage.shared
+    private let oAuth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -37,7 +37,12 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        UIBlockingProgressHUD.show()
+//        UIBlockingProgressHUD.show()
+        fetchAuthToken(code)
+        
+    }
+    
+    private func fetchAuthToken(_ code: String) {
         oAuth2Service.fetchAuthToken(code) { [weak self] result in
             guard let self = self else { return }
             DispatchQueue.main.async {
@@ -45,13 +50,14 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 case .success(let token):
                     self.delegate?.authViewController(self, didAuthenticateWithCode: code)
                     self.oAuth2TokenStorage.token = token
-                    UIBlockingProgressHUD.dismiss()
+//                    UIBlockingProgressHUD.dismiss()
                 case .failure(let error):
                     print(error)
-                    UIBlockingProgressHUD.dismiss()
+//                    UIBlockingProgressHUD.dismiss()
                 }
             }
         }
     }
+    
 }
 

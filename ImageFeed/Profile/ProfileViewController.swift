@@ -9,6 +9,8 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    private let profileService = ProfileService.shared
+    
     private var profileImage: UIImageView = {
         let image = UIImage(named: "Photo")
         let imageView = UIImageView(image: image)
@@ -53,11 +55,21 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(named: "YP Black")
+        
+        guard let profile = profileService.profile else { return }
+        updateProfileDetails(profile: profile)
+        
         addSubviews()
         addConstraints()
     }
     
     // MARK: private func
+    
+    private func updateProfileDetails(profile: Profile) {
+        nameLabel.text = profile.name
+        nicknameLabel.text = profile.loginName
+        descriptionLabel.text = profile.bio
+    }
     
     private func addConstraints() {
         profileImage.translatesAutoresizingMaskIntoConstraints = false
