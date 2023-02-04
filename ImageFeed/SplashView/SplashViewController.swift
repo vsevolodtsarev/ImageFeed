@@ -14,6 +14,7 @@ final class SplashViewController: UIViewController {
     private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let oAuth2Service = OAuth2Service.shared
+    private let profileImageService = ProfileImageService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -57,8 +58,8 @@ extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         dismiss(animated: true) { [weak self]  in
             guard let self = self else { return }
-            UIBlockingProgressHUD.show()
             self.fetchAuthToken(code)
+            UIBlockingProgressHUD.show()
         }
     }
     
@@ -68,9 +69,9 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success(let token):
                 self.fetchProfile(token: token)
-            case .failure(let error):
+            case .failure:
+                self.showAlert()
                 UIBlockingProgressHUD.dismiss()
-                print(error)
             }
         }
     }
@@ -79,14 +80,24 @@ extension SplashViewController: AuthViewControllerDelegate {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success:
-                UIBlockingProgressHUD.dismiss()
+            case .success(let profile):
+                self.profileImageService.fetchProfileImageURL(username: profile.username, token: token) { _ in }
                 self.switchToTabBarController()
-            case .failure:
                 UIBlockingProgressHUD.dismiss()
-                print("can't download profile")
-                break
+            case .failure:
+                self.showAlert()
+                UIBlockingProgressHUD.dismiss()
             }
         }
+    }
+    
+    private func showAlert() {
+        let alert = UIAlertController(title: "Что-то пошло не так(",
+                                      message: "Не удалось войти в систему",
+                                      preferredStyle: .alert)
+        let action = UIAlertAction(title: "Ок",
+                                   style: .default)
+        alert.addAction(action)
+        present(alert, animated: true)
     }
 }

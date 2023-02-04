@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     private var profileImage: UIImageView = {
         let image = UIImage(named: "Photo")
@@ -54,6 +56,14 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(forName: ProfileImageService.didChangeNotification,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
         view.backgroundColor = UIColor(named: "YP Black")
         
         guard let profile = profileService.profile else { return }
@@ -64,6 +74,17 @@ class ProfileViewController: UIViewController {
     }
     
     // MARK: private func
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        let processor = RoundCornerImageProcessor(cornerRadius: 15)
+        profileImage.kf.setImage(with: url,
+                                 placeholder: UIImage(named: "Photo"),
+                                 options: [.processor(processor)])
+    }
     
     private func updateProfileDetails(profile: Profile) {
         nameLabel.text = profile.name

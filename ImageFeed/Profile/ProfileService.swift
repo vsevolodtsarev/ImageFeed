@@ -14,7 +14,7 @@ struct ProfileResult: Codable {
     let lastName: String
     let bio: String?
     
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case username
         case firstName = "first_name"
         case lastName = "last_name"
@@ -29,7 +29,7 @@ struct ProfileResult: Codable {
         
         init(result: ProfileResult) {
             self.username = result.username
-            self.name = "\(result.firstName)" + "\(result.lastName)"
+            self.name = "\(result.firstName)" + " " + "\(result.lastName)"
             self.loginName = "@\(result.username)"
             self.bio = result.bio
         }
@@ -41,7 +41,7 @@ final class ProfileService {
     static let shared = ProfileService()
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
-    private(set) var profile: Profile?
+    private (set) var profile: Profile?
     
     
     func fetchProfile(_ token: String, completion: @escaping (Result<ProfileResult, Error>) -> Void) {
@@ -50,14 +50,13 @@ final class ProfileService {
         task?.cancel()
         
         let request = makeRequest(token: token)
-        let task = urlSession.data(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let profile):
                 self.profile = Profile(result: profile)
                 completion(.success(profile))
             case .failure(let error):
-                print(error)
                 completion(.failure(error))
             }
         }

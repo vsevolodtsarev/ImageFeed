@@ -37,9 +37,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-//        UIBlockingProgressHUD.show()
         fetchAuthToken(code)
-        
     }
     
     private func fetchAuthToken(_ code: String) {
@@ -50,14 +48,11 @@ extension AuthViewController: WebViewViewControllerDelegate {
                 case .success(let token):
                     self.delegate?.authViewController(self, didAuthenticateWithCode: code)
                     self.oAuth2TokenStorage.token = token
-//                    UIBlockingProgressHUD.dismiss()
                 case .failure(let error):
                     print(error)
-//                    UIBlockingProgressHUD.dismiss()
                 }
             }
         }
-    }
-    
+    }    
 }
 

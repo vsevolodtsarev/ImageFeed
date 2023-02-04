@@ -14,10 +14,6 @@ final class OAuth2Service {
     private var lastCode: String?
     static let shared = OAuth2Service()
     
-    private enum NetworkError: Error {
-        case codeError
-    }
-    
     func fetchAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         
         assert(Thread.isMainThread)
@@ -26,31 +22,15 @@ final class OAuth2Service {
         lastCode = code
         
         let request = makeRequest(code: code)
-        let task = urlSession.dataTask(with: request) { data, response, error in
-            
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self = self else { return }
             self.task = nil
-            
-            if let error = error {
+            switch result {
+            case .success(let responseBody):
+                let authToken = responseBody.accessToken
+                completion(.success(authToken))
+            case .failure(let error):
                 completion(.failure(error))
-                return
-            }
-            
-            if let response = response as? HTTPURLResponse,
-               response.statusCode < 200 || response.statusCode >= 300 {
-                completion(.failure(NetworkError.codeError))
-                return
-            }
-            
-            if let data = data {
-                do {
-                    let responseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    
-                    completion(.success(responseBody.accessToken))
-                    
-                } catch let error {
-                    self.lastCode = nil
-                    completion(.failure(error))
-                }
             }
         }
         

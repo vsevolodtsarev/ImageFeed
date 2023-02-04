@@ -14,7 +14,7 @@ case urlSessionError
 }
 
 extension URLSession {
-    func data<Model: Decodable>(
+    func objectTask<Model: Decodable>(
         for request: URLRequest,
         completion: @escaping (Result<Model, Error>) -> Void
     ) -> URLSessionTask {
