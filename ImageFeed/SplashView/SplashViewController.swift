@@ -15,6 +15,7 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let oAuth2Service = OAuth2Service.shared
     private let profileImageService = ProfileImageService.shared
+    private let alertPresenter = AlertPresenter()
     
     private var logoImage: UIImageView = {
         let image = UIImage(named: "Vector")
@@ -40,10 +41,12 @@ final class SplashViewController: UIViewController {
     
     private func addConstraints() {
         logoImage.translatesAutoresizingMaskIntoConstraints = false
-        logoImage.heightAnchor.constraint(equalToConstant: 78).isActive = true
-        logoImage.widthAnchor.constraint(equalToConstant: 75).isActive = true
-        logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        logoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        NSLayoutConstraint.activate([
+            logoImage.heightAnchor.constraint(equalToConstant: 78),
+            logoImage.widthAnchor.constraint(equalToConstant: 75),
+            logoImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
     }
     
     private func addSubviews() {
@@ -53,16 +56,14 @@ final class SplashViewController: UIViewController {
     private func checkAuthToken() {
         if oAuth2TokenStorage.token != nil {
             guard let token = oAuth2TokenStorage.token else { return }
-            fetchProfile(token: token)
             UIBlockingProgressHUD.show()
-            print("token not nil")
+            fetchProfile(token: token)
         } else {
             let storyboard = UIStoryboard(name: "Main", bundle: .main)
             guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else { return }
             authViewController.delegate = self
             authViewController.modalPresentationStyle = .fullScreen
             self.present(authViewController, animated: true)
-            print("go auth")
         }
     }
     
@@ -80,8 +81,9 @@ extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         dismiss(animated: true) { [weak self]  in
             guard let self = self else { return }
-            self.fetchAuthToken(code)
             UIBlockingProgressHUD.show()
+            self.fetchAuthToken(code)
+            
         }
     }
     
@@ -90,10 +92,12 @@ extension SplashViewController: AuthViewControllerDelegate {
             guard let self = self else { return }
             switch result {
             case .success(let token):
+                self.oAuth2TokenStorage.token = token
                 self.fetchProfile(token: token)
             case .failure:
-                self.showAlert()
                 UIBlockingProgressHUD.dismiss()
+                self.showAlert()
+                
             }
         }
     }
@@ -101,25 +105,22 @@ extension SplashViewController: AuthViewControllerDelegate {
     private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
+            UIBlockingProgressHUD.dismiss()
             switch result {
             case .success(let profile):
                 self.profileImageService.fetchProfileImageURL(username: profile.username, token: token) { _ in }
                 self.switchToTabBarController()
-                UIBlockingProgressHUD.dismiss()
             case .failure:
                 self.showAlert()
-                UIBlockingProgressHUD.dismiss()
             }
         }
     }
     
     private func showAlert() {
-        let alert = UIAlertController(title: "Что-то пошло не так(",
-                                      message: "Не удалось войти в систему",
-                                      preferredStyle: .alert)
-        let action = UIAlertAction(title: "Ок",
-                                   style: .default)
-        alert.addAction(action)
-        present(alert, animated: true)
+        let alertModel = AlertModel(title: "Что-то пошло не так(",
+                                    message: "Не удалось войти в систему",
+                                    buttonText: "Ок",
+                                    completion: nil)
+        alertPresenter.showResult(alertModel: alertModel)
     }
 }

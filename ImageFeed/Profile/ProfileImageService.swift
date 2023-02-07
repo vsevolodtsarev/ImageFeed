@@ -24,7 +24,7 @@ struct ImageResult: Codable {
 final class ProfileImageService {
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     static let shared = ProfileImageService()
-    private (set) var avatarURL: String?
+    private(set) var avatarURL: String?
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     
@@ -47,6 +47,7 @@ final class ProfileImageService {
             case .failure(let error):
                 completion(.failure(error))
             }
+            self.task = nil
         }
         self.task = task
         task.resume()

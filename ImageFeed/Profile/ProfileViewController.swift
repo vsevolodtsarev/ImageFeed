@@ -10,6 +10,8 @@ import Kingfisher
 
 class ProfileViewController: UIViewController {
     
+    private let profileImageServiceNotification = ProfileImageService.didChangeNotification
+    private let profileImageService = ProfileImageService.shared
     private let profileService = ProfileService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
@@ -52,17 +54,11 @@ class ProfileViewController: UIViewController {
         return exitButton
     }()
     
-    // MARK: ViewDidLoad()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(forName: ProfileImageService.didChangeNotification,
-                         object: nil,
-                         queue: .main) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
+
         updateAvatar()
         view.backgroundColor = UIColor(named: "YP Black")
         
@@ -73,11 +69,29 @@ class ProfileViewController: UIViewController {
         addConstraints()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(forName: profileImageServiceNotification,
+                         object: nil,
+                         queue: .main) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self, name: profileImageServiceObserver as? NSNotification.Name, object: nil)
+    }
+    
     // MARK: private func
     
     private func updateAvatar() {
         guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let profileImageURL = profileImageService.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
         let processor = RoundCornerImageProcessor(cornerRadius: 35)

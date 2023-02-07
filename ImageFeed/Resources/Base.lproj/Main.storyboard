@@ -194,11 +194,11 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="cyQ-Ox-jxI">
-                                <rect key="frame" x="0.0" y="98" width="414" height="4"/>
+                                <rect key="frame" x="0.0" y="84" width="414" height="4"/>
                                 <color key="progressTintColor" name="YP Black"/>
                             </progressView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="06F-Jj-pSd">
-                                <rect key="frame" x="16" y="68" width="9" height="22"/>
+                                <rect key="frame" x="16" y="54" width="9" height="22"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="chevron.backward"/>
                                 <connections>
@@ -213,7 +213,7 @@
                             <constraint firstItem="cyQ-Ox-jxI" firstAttribute="top" secondItem="06F-Jj-pSd" secondAttribute="bottom" constant="8" id="F72-N8-bzM"/>
                             <constraint firstAttribute="bottom" secondItem="EUG-Mc-2j7" secondAttribute="bottom" id="ORh-f1-Qqs"/>
                             <constraint firstItem="EUG-Mc-2j7" firstAttribute="top" secondItem="gcc-xY-neD" secondAttribute="top" id="Ph1-yX-PK8"/>
-                            <constraint firstItem="06F-Jj-pSd" firstAttribute="top" secondItem="iMT-dy-znf" secondAttribute="top" constant="20" id="Pp2-fw-paL"/>
+                            <constraint firstItem="06F-Jj-pSd" firstAttribute="top" secondItem="EUG-Mc-2j7" secondAttribute="top" constant="54" id="Pp2-fw-paL"/>
                             <constraint firstItem="EUG-Mc-2j7" firstAttribute="trailing" secondItem="gcc-xY-neD" secondAttribute="trailing" id="agN-cZ-2UJ"/>
                             <constraint firstItem="EUG-Mc-2j7" firstAttribute="leading" secondItem="gcc-xY-neD" secondAttribute="leading" id="bAN-ro-VwM"/>
                             <constraint firstItem="06F-Jj-pSd" firstAttribute="leading" secondItem="iMT-dy-znf" secondAttribute="leading" constant="16" id="ha5-wl-y3O"/>
