@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		133CB752294236CB00E68ADF /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133CB751294236CB00E68ADF /* ProfileViewController.swift */; };
+		1356AD1C29953CD300E20DF2 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1356AD1B29953CD300E20DF2 /* ImagesListService.swift */; };
 		135B71B32976E8CA00446EDB /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 135B71B22976E8CA00446EDB /* ProgressHUD */; };
 		135B71B5297990D600446EDB /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135B71B4297990D600446EDB /* UIBlockingProgressHUD.swift */; };
 		135B71B7297994FF00446EDB /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 135B71B6297994FF00446EDB /* ProfileService.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		133CB751294236CB00E68ADF /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		1356AD1B29953CD300E20DF2 /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
 		135B71B4297990D600446EDB /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		135B71B6297994FF00446EDB /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
 		135B71B8298B843E00446EDB /* NetworkExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkExtension.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 			children = (
 				13E39A5129268FDA006D2BBF /* ImagesListViewController.swift */,
 				1391C032292A730B00E613AB /* ImagesListCell.swift */,
+				1356AD1B29953CD300E20DF2 /* ImagesListService.swift */,
 			);
 			path = ImageList;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13D5F894296B08D200957C1E /* OAuth2TokenStorage.swift in Sources */,
+				1356AD1C29953CD300E20DF2 /* ImagesListService.swift in Sources */,
 				13918DEF2959EF5F001B6EB3 /* Constants.swift in Sources */,
 				13E39A5229268FDA006D2BBF /* ImagesListViewController.swift in Sources */,
 				135B71C4298FC2A900446EDB /* TabBarController.swift in Sources */,

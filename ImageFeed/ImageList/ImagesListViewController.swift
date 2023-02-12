@@ -12,6 +12,7 @@ class ImagesListViewController: UIViewController {
     
     private let showSingleImageIdentifier = "ShowSingleImage"
     private var photoName = [String]()
+    private var imagesListService = ImagesListService.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +51,15 @@ extension ImagesListViewController {
         let isLiked = IndexPath.row % 2 == 0
         let likeImage = isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
         cell.likeButton.setImage(likeImage, for: .normal)
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+        let photos = imagesListService.photos
+        if indexPath.row + 1 == photos.count {
+            imagesListService.fetchPhotosNextPage()
+        }
     }
 }
 
