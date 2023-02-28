@@ -38,7 +38,7 @@ struct UrlsResult: Codable {
 struct Photo {
     let id: String
     let size: CGSize
-    let createdAt: Date?
+    let createdAt: String
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
@@ -59,16 +59,18 @@ final class ImagesListService{
         assert(Thread.isMainThread)
         task?.cancel()
         let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
+        lastLoadedPage = (lastLoadedPage ?? 0) + 1
         let request = makeRequest(path: "/photos?page=\(nextPage)", httpMethod: "GET")
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             guard let self = self else { return }
             switch result {
             case .success(let photoResult):
                 for photo in photoResult.indices {
-                    self.photos.append(Photo(
+                    self.photos.append(
+                        Photo(
                         id: photoResult[photo].id,
                         size: CGSize(width: photoResult[photo].width, height: photoResult[photo].height),
-                        createdAt: Date(),
+                        createdAt: photoResult[photo].createdAt,
                         welcomeDescription: photoResult[photo].description,
                         thumbImageURL: photoResult[photo].urls.thumb,
                         largeImageURL: photoResult[photo].urls.full,
@@ -87,11 +89,11 @@ final class ImagesListService{
     }
     
     private func makeRequest(path: String, httpMethod: String) -> URLRequest {
-        var urlComponents = URLComponents()
+        let urlComponents = URLComponents()
         guard let url = urlComponents.url(relativeTo: defaultBaseURL) else { fatalError("Failed to create URL") }
         var request = URLRequest(url: url)
         let token = oAuthTokenStorage.token
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(String(describing: token))", forHTTPHeaderField: "Authorization")
         return request
     }
 }
