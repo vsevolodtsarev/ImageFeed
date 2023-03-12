@@ -6,18 +6,28 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
     private let showSingleImageIdentifier = "ShowSingleImage"
-    private var photoName = [String]()
+    private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
+    private var imageListServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        photoName = Array(0..<20).map{ "\($0)" }
+        imageListServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ImagesListService.didChangeNotification,
+                object: nil,
+                queue: .main) { [weak self] _ in
+                    guard let self = self else { return }
+                    self.updateTableViewAnimated()
+                }
+        imagesListService.fetchPhotosNextPage()
     }
     
     private lazy var dateFormatter: DateFormatter = {
@@ -31,7 +41,7 @@ class ImagesListViewController: UIViewController {
         if segue.identifier == showSingleImageIdentifier {
             let viewController = segue.destination as? SingleImageViewController
             if let indexPath = sender as? IndexPath {
-                let image = UIImage(named: photoName[indexPath.row])
+                let image = UIImage(named: photos[indexPath.row].fullImageURL)
                 viewController?.image = image
             }
         } else {
@@ -42,15 +52,15 @@ class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with IndexPath: IndexPath) {
-        guard let image = UIImage(named: photoName[IndexPath.row]) else {
-            return
+        let imageUrl = photos[IndexPath.row].thumbImageURL
+        let url = URL(string: imageUrl)
+        let placeholder = UIImage(named: "Stub")
+        cell.cellImage.kf.indicatorType = .activity
+        cell.cellImage.kf.setImage(with: url, placeholder: placeholder) { _ in
+            self.tableView.reloadRows(at: [IndexPath], with: .automatic)
+            cell.cellImage.kf.indicatorType = .none
         }
-        cell.cellImage.image = image
-        cell.dateLabel.text = dateFormatter.string(from: Date())
-        
-        let isLiked = IndexPath.row % 2 == 0
-        let likeImage = isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
-        cell.likeButton.setImage(likeImage, for: .normal)
+        cell.dateLabel.text = dateFormatter.string(from: photos[IndexPath.row].createdAt ?? Date())
     }
     
     func tableView(_ tableView: UITableView,
@@ -59,6 +69,20 @@ extension ImagesListViewController {
         let photos = imagesListService.photos
         if indexPath.row + 1 == photos.count {
             imagesListService.fetchPhotosNextPage()
+        }
+    }
+    
+    func updateTableViewAnimated() {
+        let oldCount = photos.count
+        let newCount = imagesListService.photos.count
+        photos = imagesListService.photos
+        if oldCount != newCount {
+            tableView.performBatchUpdates {
+                let indexPaths = (oldCount..<newCount).map { i in
+                    IndexPath(row: i, section: 0)
+                }
+                tableView.insertRows(at: indexPaths, with: .automatic)
+            } completion: { _ in }
         }
     }
 }
@@ -71,7 +95,7 @@ extension ImagesListViewController: UITableViewDelegate {
 
 extension ImagesListViewController: UITableViewDataSource {
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photoName.count
+        return photos.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
