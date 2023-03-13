@@ -11,6 +11,7 @@ import Kingfisher
 class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
+    private let alertPresenter = AlertPresenter()
     private let showSingleImageIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
@@ -41,8 +42,8 @@ class ImagesListViewController: UIViewController {
         if segue.identifier == showSingleImageIdentifier {
             let viewController = segue.destination as? SingleImageViewController
             if let indexPath = sender as? IndexPath {
-                let image = UIImage(named: photos[indexPath.row].fullImageURL)
-                viewController?.image = image
+                let urlImage = URL(string: photos[indexPath.row].fullImageURL)
+                viewController?.fullImageURL = urlImage
             }
         } else {
             super.prepare(for: segue, sender: sender)
@@ -103,8 +104,41 @@ extension ImagesListViewController: UITableViewDataSource {
         guard let imagesListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
+        imagesListCell.delegate = self
         configCell(for: imagesListCell, with: indexPath)
         return imagesListCell
+    }
+    
+
+    }
+
+extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        let photo = photos[indexPath.row]
+        
+        UIBlockingProgressHUD.show()
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
+            switch result {
+            case .success:
+                self.photos = self.imagesListService.photos
+                cell.setIsLiked(isLiked: !photo.isLiked)
+                UIBlockingProgressHUD.dismiss()
+            case .failure(let error):
+                UIBlockingProgressHUD.dismiss()
+                print(error)
+                self.showAlert()
+                
+            }
+        }
+    }
+    
+    private func showAlert() {
+        let alertModel = AlertModel(title: "Что-то пошло не так(",
+                                    message: "Не удалось поставить лайк",
+                                    buttonText: "Ок",
+                                    completion: nil)
+        alertPresenter.showResult(alertModel: alertModel)
     }
 }
 
