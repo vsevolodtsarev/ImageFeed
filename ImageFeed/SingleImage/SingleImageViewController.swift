@@ -81,7 +81,8 @@ final class SingleImageViewController: UIViewController {
         alert.addAction(UIAlertAction(
             title: "Повторить",
             style: .default,
-            handler: { _ in
+            handler: { [weak self] _ in
+                guard let self = self else { return }
                 self.setFullImage()
             }))
         self.present(alert, animated: true)

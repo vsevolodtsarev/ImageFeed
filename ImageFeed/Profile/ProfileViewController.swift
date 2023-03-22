@@ -7,7 +7,7 @@
 
 import UIKit
 import Kingfisher
-import WebKit
+
 
 class ProfileViewController: UIViewController {
     
@@ -139,7 +139,28 @@ class ProfileViewController: UIViewController {
         view.addSubview(exitButton)
     }
     
+    private func logOut() {
+        OAuth2TokenStorage.clean()
+        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration")}
+        let splashViewController = SplashViewController()
+        window.rootViewController = splashViewController
+    }
+    
     @objc private func didTapButton() {
-        
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(
+            title: "Да",
+            style: .default,
+            handler: { [weak self] _ in
+                guard let self = self else { return }
+                self.logOut()
+            }))
+        alert.addAction(UIAlertAction(
+            title: "Нет",
+            style: .default))
+        self.present(alert, animated: true)
     }
 }
