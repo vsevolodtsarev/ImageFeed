@@ -56,6 +56,8 @@ final class ImagesListService{
     
     func fetchPhotosNextPage() {
         
+        guard task == nil else { return }
+        
         let nextPage = lastLoadedPage == nil ? 1 : lastLoadedPage! + 1
         lastLoadedPage = (lastLoadedPage ?? 0) + 1
         
@@ -86,7 +88,7 @@ final class ImagesListService{
                           userInfo: ["photos": self.photos])
                 
             case .failure(let error):
-                print(error)
+                assertionFailure("\(error)")
             }
             self.task = nil
         }
@@ -105,7 +107,7 @@ final class ImagesListService{
             request.httpMethod = "DELETE"
         }
         
-        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<LikeResult, Error>) in
+        urlSession.objectTask(for: request) { [weak self] (result: Result<LikeResult, Error>) in
             guard let self = self else { return }
             switch result {
             case .success:
@@ -123,7 +125,6 @@ final class ImagesListService{
                     completion(.success(()))
                 }
             case .failure(let error):
-                print(error)
                 completion(.failure(error))
             }
         }
@@ -131,9 +132,15 @@ final class ImagesListService{
     
     private func makeRequest(
         path: String) -> URLRequest {
-            guard let baseURL = URL(string: path, relativeTo: defaultBaseURL) else { fatalError("url is nil") }
+            guard let baseURL = URL(string: path, relativeTo: defaultBaseURL) else {
+                assertionFailure("url is nil")
+                return URLRequest(url: URL(string: "")!)
+            }
             var request = URLRequest(url: baseURL)
-            guard let token = OAuth2TokenStorage().token else { fatalError("token is nil")}
+            guard let token = OAuth2TokenStorage().token else {
+                assertionFailure("token is nil")
+                return URLRequest(url: URL(string: "")!)
+            }
             request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
             return request
         }

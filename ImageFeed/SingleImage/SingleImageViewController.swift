@@ -10,9 +10,7 @@ import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
-    
     var fullImageURL: URL?
-    private let alertPresenter = AlertPresenter()
     @IBOutlet weak private var scrollView: UIScrollView!
     @IBOutlet weak private var imageView: UIImageView!
     

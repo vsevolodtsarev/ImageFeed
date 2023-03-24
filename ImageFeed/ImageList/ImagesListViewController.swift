@@ -11,7 +11,6 @@ import Kingfisher
 class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
-    private let alertPresenter = AlertPresenter()
     private let showSingleImageIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
@@ -62,6 +61,7 @@ extension ImagesListViewController {
             cell.cellImage.kf.indicatorType = .none
         }
         cell.dateLabel.text = dateFormatter.string(from: photos[IndexPath.row].createdAt ?? Date())
+        cell.setIsLiked(isLiked: photos[IndexPath.row].isLiked)
     }
     
     func tableView(_ tableView: UITableView,
@@ -118,7 +118,8 @@ extension ImagesListViewController: ImagesListCellDelegate {
         let photo = photos[indexPath.row]
         
         UIBlockingProgressHUD.show()
-        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success:
                 self.photos = self.imagesListService.photos
@@ -134,11 +135,15 @@ extension ImagesListViewController: ImagesListCellDelegate {
     }
     
     private func showAlert() {
-        let alertModel = AlertModel(title: "Что-то пошло не так(",
-                                    message: "Не удалось поставить лайк",
-                                    buttonText: "Ок",
-                                    completion: nil)
-        alertPresenter.showResult(alertModel: alertModel)
+        let alert = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось поставить лайк",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(
+            title: "Ок",
+            style: .default))
+        self.present(alert, animated: true)
+
     }
 }
 

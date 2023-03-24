@@ -55,7 +55,6 @@ class ProfileViewController: UIViewController {
         return exitButton
     }()
     
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -141,7 +140,10 @@ class ProfileViewController: UIViewController {
     
     private func logOut() {
         OAuth2TokenStorage.clean()
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration")}
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid Configuration")
+            return
+        }
         let splashViewController = SplashViewController()
         window.rootViewController = splashViewController
     }

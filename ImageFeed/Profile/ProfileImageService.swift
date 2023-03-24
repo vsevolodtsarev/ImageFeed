@@ -10,6 +10,9 @@ import Foundation
 struct UserResult: Codable {
     let profileImage: ImageResult
     
+    private enum CodingKeys: String, CodingKey {
+        case profileImage = "profile_image"
+    }
 }
 
 struct ImageResult: Codable {
@@ -53,7 +56,10 @@ final class ProfileImageService {
     private func makeRequest(token: String, username: String) -> URLRequest {
         var urlComponents = URLComponents()
         urlComponents.path = "/users/\(username)"
-        guard let url = urlComponents.url(relativeTo: defaultBaseURL) else { fatalError("Failed to create URL") }
+        guard let url = urlComponents.url(relativeTo: defaultBaseURL) else {
+            assertionFailure("Failed to create URL")
+            return URLRequest(url: URL(string: "")!)
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
