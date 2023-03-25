@@ -6,17 +6,11 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class SingleImageViewController: UIViewController {
     
-    var image: UIImage! {
-        didSet {
-            guard isViewLoaded else { return }
-            imageView.image = image
-            rescaleAndCenterImageInScrollView(image: image)
-        }
-    }
-    
+    var fullImageURL: URL?
     @IBOutlet weak private var scrollView: UIScrollView!
     @IBOutlet weak private var imageView: UIImageView!
     
@@ -24,22 +18,37 @@ final class SingleImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.image = image
+        setFullImage()
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
-        rescaleAndCenterImageInScrollView(image: image)
     }
-    
+        
     //MARK: private func
     
     @IBAction private func didTapShareButton(_ sender: UIButton) {
-        let activityImage = [image]
+        let activityImage = [imageView.image]
         let activityAction = UIActivityViewController(activityItems: activityImage as [Any], applicationActivities: nil)
         present(activityAction, animated: true)
     }
     
     @IBAction private func didTapBackButton() {
         dismiss(animated: true, completion: nil)
+    }
+    
+    private func setFullImage() {
+        UIBlockingProgressHUD.show()
+        imageView.kf.setImage(with: fullImageURL) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
+            switch result {
+            case .success(let imageResult):
+                self.rescaleAndCenterImageInScrollView(image: imageResult.image)
+            case .failure(let error):
+                print(error)
+                self.showError()
+                
+            }
+        }
     }
     
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
@@ -57,6 +66,24 @@ final class SingleImageViewController: UIViewController {
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+    }
+    
+    private func showError() {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так",
+            message: "Попробовать еще раз?",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(
+            title: "Не надо",
+            style: .default))
+        alert.addAction(UIAlertAction(
+            title: "Повторить",
+            style: .default,
+            handler: { [weak self] _ in
+                guard let self = self else { return }
+                self.setFullImage()
+            }))
+        self.present(alert, animated: true)
     }
     
 }

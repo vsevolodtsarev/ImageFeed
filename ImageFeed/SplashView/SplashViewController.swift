@@ -15,8 +15,7 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let oAuth2Service = OAuth2Service.shared
     private let profileImageService = ProfileImageService.shared
-    private let alertPresenter = AlertPresenter()
-    
+
     private var logoImage: UIImageView = {
         let image = UIImage(named: "Vector")
         let imageView = UIImageView(image: image)
@@ -33,7 +32,6 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         checkAuthToken()
     }
     
@@ -68,7 +66,10 @@ final class SplashViewController: UIViewController {
     }
     
     private func switchToTabBarController() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid Configuration")
+            return
+        }
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarViewController")
         window.rootViewController = tabBarController
@@ -97,7 +98,6 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .failure:
                 UIBlockingProgressHUD.dismiss()
                 self.showAlert()
-                
             }
         }
     }
@@ -105,7 +105,6 @@ extension SplashViewController: AuthViewControllerDelegate {
     private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
             guard let self = self else { return }
-            UIBlockingProgressHUD.dismiss()
             switch result {
             case .success(let profile):
                 self.profileImageService.fetchProfileImageURL(username: profile.username, token: token) { _ in }
@@ -113,14 +112,18 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .failure:
                 self.showAlert()
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
     
     private func showAlert() {
-        let alertModel = AlertModel(title: "Что-то пошло не так(",
-                                    message: "Не удалось войти в систему",
-                                    buttonText: "Ок",
-                                    completion: nil)
-        alertPresenter.showResult(alertModel: alertModel)
+        let alert = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+        alert.addAction(UIAlertAction(
+            title: "Ок",
+            style: .default))
+        self.present(alert, animated: true)
     }
 }
