@@ -56,7 +56,8 @@ extension ImagesListViewController {
         let url = URL(string: imageUrl)
         let placeholder = UIImage(named: "Stub")
         cell.cellImage.kf.indicatorType = .activity
-        cell.cellImage.kf.setImage(with: url, placeholder: placeholder) { _ in
+        cell.cellImage.kf.setImage(with: url, placeholder: placeholder) { [weak self] _ in
+            guard let self = self else { return }
             self.tableView.reloadRows(at: [IndexPath], with: .automatic)
             cell.cellImage.kf.indicatorType = .none
         }
