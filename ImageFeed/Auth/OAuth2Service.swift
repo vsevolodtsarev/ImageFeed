@@ -39,15 +39,19 @@ final class OAuth2Service {
     }
     
     private func makeRequest(code: String) -> URLRequest {
+        let tokenURLString = "https://unsplash.com/oauth/token"
         var urlComponents = URLComponents(string: tokenURLString)
         urlComponents?.queryItems = [
-            URLQueryItem(name: "client_id", value: accessKey),
-            URLQueryItem(name: "client_secret", value: secretKey),
-            URLQueryItem(name: "redirect_uri", value: redirectURI),
+            URLQueryItem(name: "client_id", value: AccessKey),
+            URLQueryItem(name: "client_secret", value: SecretKey),
+            URLQueryItem(name: "redirect_uri", value: RedirectURI),
             URLQueryItem(name: "code", value: code),
             URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
-        guard let url = urlComponents?.url else { fatalError("Failed to create URL") }
+        guard let url = urlComponents?.url else {
+            assertionFailure("Failed to create URL")
+            return URLRequest(url: URL(string: "")!)
+        }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         return request

@@ -23,7 +23,14 @@ final class AuthViewController: UIViewController {
         if segue.identifier == unsplashAuthScreenSegueId {
             guard
                 let webViewViewController = segue.destination as? WebViewViewController
-            else { fatalError("Failed to prepare for \(unsplashAuthScreenSegueId)") }
+            else {
+                assertionFailure("Failed to prepare for \(unsplashAuthScreenSegueId)")
+                return
+            }
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
