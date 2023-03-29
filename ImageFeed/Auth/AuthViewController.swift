@@ -14,10 +14,17 @@ protocol AuthViewControllerDelegate: AnyObject {
 
 final class AuthViewController: UIViewController {
     
+    @IBOutlet  weak private var authButton: UIButton!
     private let unsplashAuthScreenSegueId = "ShowWebView"
     private let oAuth2TokenStorage = OAuth2TokenStorage.shared
     private let oAuth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        authButton.isAccessibilityElement = true
+        authButton.accessibilityIdentifier = "Authenticate"
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == unsplashAuthScreenSegueId {

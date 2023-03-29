@@ -88,7 +88,8 @@ final class ImagesListService{
                           userInfo: ["photos": self.photos])
                 
             case .failure(let error):
-                assertionFailure("\(error)")
+//                assertionFailure("\(error)")
+                print(error)
             }
             self.task = nil
         }

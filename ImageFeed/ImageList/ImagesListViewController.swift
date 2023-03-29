@@ -26,6 +26,7 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         presenter?.viewDidLoad()
         imagesListService.fetchPhotosNextPage()
@@ -53,6 +54,8 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with IndexPath: IndexPath) {
+        cell.isAccessibilityElement = true
+        cell.likeButton.accessibilityIdentifier = "like button"
         let imageUrl = photos[IndexPath.row].thumbImageURL
         let url = URL(string: imageUrl)
         let placeholder = UIImage(named: "Stub")

@@ -23,6 +23,7 @@ final class ImagesListCell: UITableViewCell {
         delegate?.imageListCellDidTapLike(self)
     }
     
+
     func setIsLiked(isLiked: Bool) {
         let activeLikeImage = UIImage(named: "Active")
         let notActiveLikedImage = UIImage(named: "No Active")

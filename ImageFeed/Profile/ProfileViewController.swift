@@ -55,6 +55,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
                                                target: nil,
                                                action: #selector(didTapButton))
         exitButton.tintColor = UIColor(named: "YP Red")
+        exitButton.accessibilityIdentifier = "exit button"
         return exitButton
     }()
     

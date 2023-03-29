@@ -30,6 +30,12 @@ final class WebViewViewController: UIViewController & WebViewControllerProtocol 
     weak var delegate: WebViewViewControllerDelegate?
     private var estimatedProgressObservation: NSKeyValueObservation?
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        webView.isAccessibilityElement = false
+        webView.accessibilityIdentifier = "UnsplashWebView"
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         estimatedProgressObservation = webView.observe(
@@ -39,7 +45,6 @@ final class WebViewViewController: UIViewController & WebViewControllerProtocol 
                  guard let self = self else { return }
                  self.presenter?.didUpdateProgressValue(self.webView.estimatedProgress)
              })
-        
         webView.navigationDelegate = self
         presenter?.viewDidLoad()
     }
