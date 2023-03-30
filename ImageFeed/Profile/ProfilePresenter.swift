@@ -13,7 +13,7 @@ public protocol ProfilePresenterProtocol {
 }
 
 final class ProfilePresenter: ProfilePresenterProtocol {
-    var view: ProfileViewControllerProtocol?
+    weak var view: ProfileViewControllerProtocol?
     private var profileImageServiceObserver: NSObjectProtocol?
     private let profileImageServiceNotification = ProfileImageService.didChangeNotification
     

@@ -13,7 +13,7 @@ public protocol ImagesListPresenterProtocol {
 }
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
-    var view: ImagesListViewControllerProtocol?
+    weak var view: ImagesListViewControllerProtocol?
     private var imageListServiceObserver: NSObjectProtocol?
     private let imagesListServiceNotification = ImagesListService.didChangeNotification
     private let imagesListService = ImagesListService.shared
