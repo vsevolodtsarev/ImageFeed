@@ -14,8 +14,15 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet weak private var scrollView: UIScrollView!
     @IBOutlet weak private var imageView: UIImageView!
     
-    //MARK: viewDidLoad
+    @IBOutlet weak private var backButton: UIButton!
+   
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        backButton.isAccessibilityElement = true
+        backButton.accessibilityIdentifier = "Back button"
+    }
     
+    //MARK: viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         setFullImage()

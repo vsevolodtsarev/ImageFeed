@@ -8,25 +8,27 @@
 import UIKit
 import Kingfisher
 
-class ImagesListViewController: UIViewController {
+public protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get set }
+    func updateTableViewAnimated()
+}
+
+final class ImagesListViewController: UIViewController & ImagesListViewControllerProtocol {
+    var presenter: ImagesListPresenterProtocol?
     @IBOutlet private var tableView: UITableView!
-    
     private let showSingleImageIdentifier = "ShowSingleImage"
     private var photos: [Photo] = []
     private var imagesListService = ImagesListService.shared
-    private var imageListServiceObserver: NSObjectProtocol?
+    
+    func configure(_ presenter: ImagesListPresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
     
     override func viewDidLoad() {
-        super.viewDidLoad()
         
-        imageListServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ImagesListService.didChangeNotification,
-                object: nil,
-                queue: .main) { [weak self] _ in
-                    guard let self = self else { return }
-                    self.updateTableViewAnimated()
-                }
+        super.viewDidLoad()
+        presenter?.viewDidLoad()
         imagesListService.fetchPhotosNextPage()
     }
     
@@ -52,6 +54,8 @@ class ImagesListViewController: UIViewController {
 
 extension ImagesListViewController {
     func configCell(for cell: ImagesListCell, with IndexPath: IndexPath) {
+        cell.isAccessibilityElement = true
+        cell.likeButton.accessibilityIdentifier = "like button"
         let imageUrl = photos[IndexPath.row].thumbImageURL
         let url = URL(string: imageUrl)
         let placeholder = UIImage(named: "Stub")
@@ -110,8 +114,7 @@ extension ImagesListViewController: UITableViewDataSource {
         return imagesListCell
     }
     
-
-    }
+}
 
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
@@ -144,7 +147,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
             title: "Ок",
             style: .default))
         self.present(alert, animated: true)
-
     }
 }
 

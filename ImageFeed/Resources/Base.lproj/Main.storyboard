@@ -76,6 +76,7 @@
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y6O-OD-QbZ" userLabel="Like Button">
                                                     <rect key="frame" x="341" y="-5" width="71" height="56"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="like button" label="like button"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" title="Button" image="No Active"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="No Active" title=" ">
@@ -177,6 +178,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="aGw-uQ-sb6"/>
+                    <connections>
+                        <outlet property="authButton" destination="chu-iE-YHi" id="iaP-Bw-w5Q"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Rz8-gD-mIF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -185,7 +189,7 @@
         <!--Web View View Controller-->
         <scene sceneID="dsV-Zv-qOp">
             <objects>
-                <viewController id="Lsa-Vb-JEh" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="Lsa-Vb-JEh" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gcc-xY-neD">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -302,6 +306,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="d7m-Nj-GIK"/>
                     <connections>
+                        <outlet property="backButton" destination="xXc-XF-x2G" id="PBs-Hk-AlZ"/>
                         <outlet property="imageView" destination="QdN-kh-LG3" id="aw1-q0-LI3"/>
                         <outlet property="scrollView" destination="IeI-l6-1C9" id="cMo-gN-kQZ"/>
                     </connections>

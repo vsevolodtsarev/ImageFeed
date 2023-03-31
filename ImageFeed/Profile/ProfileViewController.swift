@@ -8,13 +8,16 @@
 import UIKit
 import Kingfisher
 
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateAvatar()
+}
 
-class ProfileViewController: UIViewController {
-    
-    private let profileImageServiceNotification = ProfileImageService.didChangeNotification
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     private let profileImageService = ProfileImageService.shared
     private let profileService = ProfileService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter: ProfilePresenterProtocol?
     
     private var profileImage: UIImageView = {
         let image = UIImage(named: "Photo")
@@ -52,52 +55,44 @@ class ProfileViewController: UIViewController {
                                                target: nil,
                                                action: #selector(didTapButton))
         exitButton.tintColor = UIColor(named: "YP Red")
+        exitButton.accessibilityIdentifier = "exit button"
         return exitButton
     }()
     
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+        self.presenter?.view = self
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        updateAvatar()
         view.backgroundColor = UIColor(named: "YP Black")
+        addSubviews()
+        addConstraints()
+        presenter?.viewDidLoad()
         
         guard let profile = profileService.profile else { return }
         updateProfileDetails(profile: profile)
-        
-        addSubviews()
-        addConstraints()
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(forName: profileImageServiceNotification,
-                         object: nil,
-                         queue: .main) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        
         NotificationCenter.default.removeObserver(self, name: profileImageServiceObserver as? NSNotification.Name, object: nil)
     }
     
-    // MARK: private func
+    // MARK: func
     
-    private func updateAvatar() {
+    func updateAvatar() {
         guard
             let profileImageURL = profileImageService.avatarURL,
             let url = URL(string: profileImageURL)
         else { return }
         let processor = RoundCornerImageProcessor(cornerRadius: 35)
-        profileImage.kf.setImage(with: url,
-                                 placeholder: UIImage(named: "person.crop.circle.fill"),
-                                 options: [.processor(processor)])
+        let placeholder = UIImage(named: "person.crop.circle.fill")
+        profileImage.kf.setImage(
+            with: url,
+            placeholder: placeholder,
+            options: [.processor(processor)])
     }
     
     private func updateProfileDetails(profile: Profile) {
